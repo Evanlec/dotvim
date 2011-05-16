@@ -8,8 +8,19 @@ call vundle#rc()
 " My Bundles here:
 "
 " original repos on github
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-markdown'
+Bundle 'tpope/vim-pastie'
+Bundle 'L9'
 Bundle 'FuzzyFinder'
+Bundle 'lokaltog/vim-easymotion'
+Bundle 'ScrollColors'
+Bundle 'tpope/vim-unimpaired'
+Bundle 'tpope/vim-surround'
+Bundle 'vim-scripts/mru.vim'
+Bundle 'git://git.wincent.com/command-t.git'
 
 set nowrap
 set wrapmargin=5
@@ -17,6 +28,7 @@ set wrapmargin=5
 set wrapscan
 set linebreak
 set showbreak=>\
+set startofline
 
 set history=1000
 
@@ -26,6 +38,23 @@ set ttymouse=xterm2
 set ttimeoutlen=100
 
 set fileencodings=ucs-bom,utf-8,windows-1252,default
+set fileformats=unix,dos
+set fileformat=unix
+set encoding=utf-8
+set termencoding=utf-8
+" Instantly leave insert mode when pressing <Esc> {{{
+" This works by disabling the mapping timeout completely in normal mode,
+" and enabling it in insert mode with a very low timeout length.
+augroup fastescape
+  autocmd!
+
+  set notimeout
+  set ttimeout
+  set timeoutlen=10
+
+  au InsertEnter * set timeout
+  au InsertLeave * set notimeout
+augroup END
 
 set iskeyword+=_,$,@,%,# " none of these should be word dividers, so make them not be
 set iskeyword-=/
@@ -35,6 +64,7 @@ set listchars=tab:>-,trail:-
 set hidden
 
 set vb t_vb= " disable any beeps or flashes on error
+set shellcmdflag=-ic "run interactive shell for !cmd
 set ruler  " Show ruler
 
 "maybe these speed things up?
@@ -182,6 +212,9 @@ autocmd FileType text setlocal textwidth=80
 " mail
 autocmd FileType mail,human set formatoptions+=t textwidth=72
 
+" html
+autocmd BufNewFile *.html  0r ~/.vim/skeleton.html
+
 " PHP
 let php_baselib = 1
 let php_folding = 0
@@ -199,42 +232,6 @@ autocmd FileType c set expandtab ai shiftwidth=4 softtabstop=4 tabstop=4
 autocmd FileType python let python_highlight_all = 1
 autocmd FileType python let python_slow_sync = 1
 autocmd FileType python set expandtab ai shiftwidth=4 softtabstop=4 tabstop=4
-
-" Django file jumping
-let g:last_relative_dir = ''
-nnoremap \1 :call RelatedFile ("models.py")<cr>
-nnoremap \2 :call RelatedFile ("views.py")<cr>
-nnoremap \3 :call RelatedFile ("urls.py")<cr>
-nnoremap \4 :call RelatedFile ("admin.py")<cr>
-nnoremap \5 :call RelatedFile ("tests.py")<cr>
-nnoremap \6 :call RelatedFile ( "templates/" )<cr>
-nnoremap \7 :call RelatedFile ( "templatetags/" )<cr>
-nnoremap \8 :call RelatedFile ( "management/" )<cr>
-nnoremap \0 :e settings.py<cr>
-nnoremap \9 :e urls.py<cr>
-
-fun! RelatedFile(file)
-    "This is to check that the directory looks djangoish
-    if filereadable(expand("%:h"). '/models.py') || isdirectory(expand("%:h") . "/templatetags/")
-        exec "edit %:h/" . a:file
-        let g:last_relative_dir = expand("%:h") . '/'
-        return ''
-    endif
-    if g:last_relative_dir != ''
-        exec "edit " . g:last_relative_dir . a:file
-        return ''
-    endif
-    echo "Cant determine where relative file is : " . a:file
-    return ''
-endfun
-
-fun SetAppDir()
-    if filereadable(expand("%:h"). '/models.py') || isdirectory(expand("%:h") . "/templatetags/")
-        let g:last_relative_dir = expand("%:h") . '/'
-        return ''
-    endif
-endfun
-autocmd BufEnter *.py call SetAppDir()
 
 " LaTeX
 autocmd Filetype tex,latex set grepprg=grep\ -nH\ $
@@ -307,6 +304,9 @@ let Tlist_Show_Menu = 1
 let Tlist_Exit_OnlyWindow = 1
 let tlist_php_settings = 'php;c:class;f:Functions'
 
+" easy motion
+let g:EasyMotion_leader_key = '<Leader>m'
+
 "fuzzy finder
 let g:fuzzy_roots = ['/home/el']
 
@@ -316,11 +316,15 @@ let NERDTreeChDirMode = 2
 let NERDTreeIgnore=['\.db$', '\~$', '\.pyc$', '^__init__\.py$', '\.jpg$', '\.gif$', '\.png$', '\.pdf$']
 let NerdTreeMouseMode = 2
 
-"Load templates
-autocmd BufNewFile *.html  0r ~/.vim/skeleton.html
+"MRU
+let MRU_Add_Menu = 0
+
 " }}}
 
 "{{{ User Commands
+
+command! Editrc :e $MYVIMRC
+
 command! Snip :new /home/el/.vim/snippets/php.snippets
 
 command! -nargs=+ Grep :grep -r --include=*.php --exclude-dir=blog --exclude-dir=wp --exclude-dir=phpMyAdmin '<args>' /home/el/daddys
