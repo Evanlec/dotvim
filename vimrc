@@ -12,7 +12,9 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-markdown'
+Bundle 'digitaltoad/vim-jade'
 Bundle 'tpope/vim-pastie'
+Bundle 'tpope/vim-haml'
 Bundle 'L9'
 Bundle 'FuzzyFinder'
 Bundle 'lokaltog/vim-easymotion'
@@ -29,6 +31,7 @@ set wrapscan
 set linebreak
 set showbreak=>\
 set startofline
+set virtualedit=all
 
 set history=1000
 
