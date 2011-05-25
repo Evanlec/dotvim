@@ -10,6 +10,7 @@ call vundle#rc()
 " original repos on github
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/syntastic'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-markdown'
 Bundle 'digitaltoad/vim-jade'
@@ -31,9 +32,14 @@ set wrapscan
 set linebreak
 set showbreak=>\
 set startofline
+" kinda crazy but I like it, allows cursor to move anywhere
 set virtualedit=all
+" use regex for search
+set magic
 
 set history=1000
+set autoread
+set autowriteall
 
 set mouse=a
 set ttymouse=xterm2
@@ -45,7 +51,7 @@ set fileformats=unix,dos
 set fileformat=unix
 set encoding=utf-8
 set termencoding=utf-8
-" Instantly leave insert mode when pressing <Esc> {{{
+" Instantly leave insert mode when pressing <Esc>
 " This works by disabling the mapping timeout completely in normal mode,
 " and enabling it in insert mode with a very low timeout length.
 augroup fastescape
@@ -111,7 +117,7 @@ set smarttab
 " command mode
 set wildmenu
 set wildmode=list:longest,full
-set wildignore=.jpg,.png,.gif,.swf,.bin,.tmp
+set wildignore+=*.jpg,*.png,*.gif,*.swf,*.bin,.tmp,.git,.svn,images/**
 set wildignorecase
 
 " copy / pasting
@@ -132,9 +138,9 @@ set foldcolumn=2
 " colours
 set t_Co=256
 if &diff
-  color candycode
+  color ir_black
 else
-  color candycode
+  color ir_black
 endif
 " }}}
 
@@ -157,6 +163,11 @@ set statusline+=%*
 "display a warning if file encoding isnt utf-8
 set statusline+=%#warningmsg#
 set statusline+=%{(&fenc!='utf-8'&&&fenc!='')?'['.&fenc.']':''}
+set statusline+=%*
+
+"syntastic warnings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 set statusline+=%h "help file flag
@@ -287,6 +298,8 @@ inoremap <silent> <F12> <esc>:MRU<CR>
 nnoremap <C-e> 6<C-e>
 nnoremap <C-y> 6<C-y>
 
+map <leader>e :e! ~/.vim/vimrc<cr>
+
 "map to bufexplorer
 " nnoremap <C-B> :BufExplorer<cr>
 
@@ -321,6 +334,11 @@ let NerdTreeMouseMode = 2
 
 "MRU
 let MRU_Add_Menu = 0
+
+"syntastic
+let g:syntastic_enable_signs=1
+let g:syntastic_auto_jump=1
+let g:syntastic_auto_loc_list=1
 
 " }}}
 
