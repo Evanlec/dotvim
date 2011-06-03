@@ -24,6 +24,7 @@ Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-surround'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'git://git.wincent.com/command-t.git'
+Bundle 'timcharper/textile.vim'
 
 set nowrap
 set wrapmargin=5
@@ -73,7 +74,6 @@ set listchars=tab:>-,trail:-
 set hidden
 
 set vb t_vb= " disable any beeps or flashes on error
-set shellcmdflag=-ic "run interactive shell for !cmd
 set ruler  " Show ruler
 
 "maybe these speed things up?
@@ -211,8 +211,6 @@ function! SetCursorPosition()
     end
 endfunction
 
-" When vimrc is edited, reload it (have yet to see this actually work)
-autocmd! bufwritepost vimrc source $MYVIMRC
 
 "{{{ -[ FileTypes ]-
 " Jump to last known cursor position
@@ -237,7 +235,7 @@ let php_html_in_strings = 1
 let php_no_shorttags = 0
 let php_sync_method = 1
 autocmd FileType php set shiftwidth=2 softtabstop=2 tabstop=2
-autocmd FileType php set noet ft=php.javascript.html
+autocmd FileType php set noet ft=php.html.javascript
 
 " C
 autocmd FileType c set expandtab ai shiftwidth=4 softtabstop=4 tabstop=4
@@ -344,11 +342,14 @@ let g:syntastic_auto_loc_list=1
 
 "{{{ User Commands
 
+" When vimrc is edited, reload it (have yet to see this actually work)
+autocmd! bufwritepost ~/.vimrc source $MYVIMRC
+
 command! Editrc :e $MYVIMRC
 
-command! Snip :new /home/el/.vim/snippets/php.snippets
-
 command! -nargs=+ Grep :grep -r --include=*.php --exclude-dir=blog --exclude-dir=wp --exclude-dir=phpMyAdmin '<args>' /home/el/daddys
+
+command! W :w !sudo tee %
 
 function! ShowSpaces(...)
   let @/='\v(\s+$)|( +\ze\t)'
