@@ -25,6 +25,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'git://git.wincent.com/command-t.git'
 Bundle 'timcharper/textile.vim'
+Bundle 'altercation/vim-colors-solarized'
 
 set nowrap
 set wrapmargin=5
@@ -135,12 +136,13 @@ set number
 set foldmethod=marker
 set nocursorline
 set foldcolumn=2
-" colours
+set background=dark
+" colors
 set t_Co=256
 if &diff
-  color ir_black
+  color inkpot
 else
-  color ir_black
+  color solarized
 endif
 " }}}
 
