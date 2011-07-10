@@ -1,6 +1,6 @@
 set guicursor+=n-v-c:blinkon0
 set background=dark
-colorscheme solarized
+colorscheme xoria256
 set gfn=Droid\ Sans\ Mono\ 10
 set guioptions=aci
 "set lines=60

@@ -2,25 +2,27 @@
 " Set nocompatible first
 set nocompatible
 
-set rtp+=~/.vim/vundle.git/ 
+set rtp+=~/.vim/bundle/vundle/ 
 call vundle#rc()
+
+" Let vundle manage vundle
+Bundle 'gmarik/vundle'
 
 " My Bundles here:
 "
-" original repos on github
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/syntastic'
+"Bundle 'scrooloose/syntastic'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-markdown'
 Bundle 'digitaltoad/vim-jade'
 Bundle 'tpope/vim-pastie'
 Bundle 'tpope/vim-haml'
 Bundle 'L9'
-Bundle 'FuzzyFinder'
-Bundle 'lokaltog/vim-easymotion'
+"Bundle 'FuzzyFinder'
+"Bundle 'lokaltog/vim-easymotion'
 Bundle 'ScrollColors'
-Bundle 'tpope/vim-unimpaired'
+"Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-surround'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'git://git.wincent.com/command-t.git'
@@ -41,6 +43,7 @@ set magic
 
 set history=1000
 set autoread
+
 set autowriteall
 
 set mouse=a
@@ -142,7 +145,7 @@ set t_Co=256
 if &diff
   color inkpot
 else
-  color solarized
+  color xoria256
 endif
 " }}}
 
@@ -169,7 +172,6 @@ set statusline+=%*
 
 "syntastic warnings
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 set statusline+=%h "help file flag
@@ -251,9 +253,13 @@ autocmd FileType python set expandtab ai shiftwidth=4 softtabstop=4 tabstop=4
 autocmd Filetype tex,latex set grepprg=grep\ -nH\ $
 autocmd Filetype tex,latex let g:tex_flavor = "latex"
 
+" .Dat (binary, data files)
+autocmd BufRead,BufNewFile *.dat set binary noendofline
+
 "}}}
 
 "{{{ -[ Mappings ]-"
+
 
 "make Y consistent with C and D
 nnoremap Y y$
@@ -278,10 +284,6 @@ nnoremap <silent> <F9> :TlistUpdate<CR>
 nnoremap <silent> <F4> :NERDTreeToggle<CR>
 inoremap <silent> <F4> <esc>:NERDTreeToggle<CR>
 
-" Fuzzyfinder
-nnoremap <silent> <F3> :FuzzyFinderFile<CR>
-inoremap <silent> <F3> <esc>:FuzzyFinderFile<CR>
-
 " :wq shortcuts
 nnoremap <silent> <F5> :w<CR>
 inoremap <silent> <F5> <esc>:w<CR>
@@ -300,8 +302,8 @@ nnoremap <C-y> 6<C-y>
 
 map <leader>e :e! ~/.vim/vimrc<cr>
 
-"map to bufexplorer
-" nnoremap <C-B> :BufExplorer<cr>
+" Remove buffer
+nnoremap <silent> <LocalLeader>- :bd<CR>
 
 "Django surround plugin mappings
 let g:surround_{char2nr("b")} = "{% block\1 \r..*\r &\1%}\r{% endblock %}"
@@ -320,38 +322,29 @@ let Tlist_Show_Menu = 1
 let Tlist_Exit_OnlyWindow = 1
 let tlist_php_settings = 'php;c:class;f:Functions'
 
-" easy motion
-let g:EasyMotion_leader_key = '<Leader>m'
-
-"fuzzy finder
-let g:fuzzy_roots = ['/home/el']
-
 "NerdTree settings
 "let NERDTreeHighlightCursorline = 1
 let NERDTreeChDirMode = 2
-let NERDTreeIgnore=['\.db$', '\~$', '\.pyc$', '^__init__\.py$', '\.jpg$', '\.gif$', '\.png$', '\.pdf$']
+let NERDTreeIgnore=['\.db$', '\~$', '\.pyc$', '^__init__\.py$', '\.jpg$', '\.gif$', '\.png$', '\.pdf$', '\.rxvt.*']
 let NerdTreeMouseMode = 2
 
 "MRU
 let MRU_Add_Menu = 0
-
-"syntastic
-let g:syntastic_enable_signs=1
-let g:syntastic_auto_jump=1
-let g:syntastic_auto_loc_list=1
 
 " }}}
 
 "{{{ User Commands
 
 " When vimrc is edited, reload it (have yet to see this actually work)
-autocmd! bufwritepost ~/.vimrc source $MYVIMRC
+" autocmd! bufwritepost ~/.vimrc source $MYVIMRC
 
 command! Editrc :e $MYVIMRC
 
 command! -nargs=+ Grep :grep -r --include=*.php --exclude-dir=blog --exclude-dir=wp --exclude-dir=phpMyAdmin '<args>' /home/el/daddys
 
-command! W :w !sudo tee %
+"command! W :w !sudo tee %
+
+comm! W exec 'w !sudo tee % > /dev/null' | e!
 
 function! ShowSpaces(...)
   let @/='\v(\s+$)|( +\ze\t)'
@@ -376,4 +369,3 @@ nnoremap <Leader>,     :ShowSpaces 1<CR>
 nnoremap <Leader>.   m`:TrimSpaces<CR>``
 vnoremap <Leader>.   :TrimSpaces<CR>
 "}}}
-
