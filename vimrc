@@ -2,32 +2,80 @@
 " Set nocompatible first
 set nocompatible
 
-set rtp+=~/.vim/bundle/vundle/ 
+"enable filetype plugin
+filetype plugin on
+filetype indent on
+
+" Set to auto read when a file is changed from the outside
+set autoread
+
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file
+let mapleader = ","
+let g:mapleader = ","
+
+" command mode
+set wildmenu
+set wildmode=list:longest,full
+set wildignore+=*.jpg,*.png,*.gif,*.swf,*.bin,.tmp,.git,.svn,images/**,.class
+set wildignorecase
+
+" Always show current position
+set ruler
+
+" dont redraw while executing macros
+"set nolazyredraw
+
+" improves performance -- let OS decide when to flush disk
+set nofsync
+
+"no backup/swap
+set nowb
+set nobackup
+set noswapfile
+
+" lots of undolevels
+set undolevels=500
+
+" write buffer when leaving
+set autowrite
+
+" vundle
+set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " Let vundle manage vundle
 Bundle 'gmarik/vundle'
 
-" My Bundles here:
-"
+" Bundles
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
-"Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/snipmate-snippets'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-markdown'
-Bundle 'digitaltoad/vim-jade'
 Bundle 'tpope/vim-pastie'
 Bundle 'tpope/vim-haml'
-Bundle 'L9'
-"Bundle 'FuzzyFinder'
-"Bundle 'lokaltog/vim-easymotion'
-Bundle 'ScrollColors'
-"Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-abolish'
+Bundle 'L9'
+Bundle 'ScrollColors'
 Bundle 'vim-scripts/mru.vim'
-Bundle 'git://git.wincent.com/command-t.git'
+Bundle 'vim-scripts/vimwiki'
 Bundle 'timcharper/textile.vim'
 Bundle 'altercation/vim-colors-solarized'
+Bundle 'godlygeek/tabular'
+Bundle 'vim-scripts/rest.vim'
+Bundle 'vim-scripts/indentpython.vim'
+Bundle 'python.vim--Vasiliev'
+Bundle 'kien/ctrlp.vim'
+Bundle 'msanders/snipmate.vim'
+Bundle 'csv.vim'
+Bundle 'Vimpy'
+Bundle 'less.vim'
+Bundle 'digitaltoad/vim-jade'
+Bundle 'mattsa/vim-eddie'
+Bundle 'taglist.vim'
+Bundle 'Lokaltog/vim-powerline'
 
 set nowrap
 set wrapmargin=5
@@ -42,20 +90,20 @@ set virtualedit=all
 set magic
 
 set history=1000
-set autoread
 
 set autowriteall
 
 set mouse=a
 set ttymouse=xterm2
+set shell=/bin/bash
 
 set ttimeoutlen=100
 
 set fileencodings=ucs-bom,utf-8,windows-1252,default
 set fileformats=unix,dos
-set fileformat=unix
 set encoding=utf-8
 set termencoding=utf-8
+
 " Instantly leave insert mode when pressing <Esc>
 " This works by disabling the mapping timeout completely in normal mode,
 " and enabling it in insert mode with a very low timeout length.
@@ -70,18 +118,17 @@ augroup fastescape
   au InsertLeave * set notimeout
 augroup END
 
-set iskeyword+=_,$,@,%,# " none of these should be word dividers, so make them not be
+set iskeyword+=_,$,@,%,# " word dividers
 set iskeyword-=/
-"set lazyredraw
 set listchars=tab:>-,trail:-
 "hide buffers when not displayed
 set hidden
 
 set vb t_vb= " disable any beeps or flashes on error
-set ruler  " Show ruler
+set autochdir
 
 "maybe these speed things up?
-set ttyfast 
+set ttyfast
 "set ttyscroll=1
 let loaded_matchparen = 1
 
@@ -96,9 +143,11 @@ runtime macros/matchit.vim
 " search
 set nohls
 set incsearch
-set showmatch
 set ignorecase
 set smartcase
+
+" show matching braces/brackets
+set showmatch
 
 "store .swp files in central location
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
@@ -107,7 +156,6 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 " intuitive backspacing in insert mode
 set backspace=indent,eol,start
 
-filetype plugin indent on
 
 " identing
 set tabstop=8
@@ -118,17 +166,10 @@ set shiftround " when at 3 spaces, and I hit > ... go to 4, not 5
 set expandtab
 set smarttab
 
-" command mode
-set wildmenu
-set wildmode=list:longest,full
-set wildignore+=*.jpg,*.png,*.gif,*.swf,*.bin,.tmp,.git,.svn,images/**
-set wildignorecase
 
 " copy / pasting
 set clipboard=unnamed
 set clipboard+=unnamed
-" make Ctrl-C behave like in windows
-vnoremap <C-c> "+y
 
 " {{{ -[ Look ]-
 " general
@@ -136,18 +177,31 @@ syntax on
 set showcmd
 set showmode
 set number
+set numberwidth=3
 set foldmethod=marker
 set nocursorline
-set foldcolumn=2
+set foldcolumn=3
 set background=dark
+set cmdheight=2
+" show report when N lines were changed. 0 means always report
+set report=0
+
 " colors
-set t_Co=256
+
+if &term == "xterm"
+  set t_Co=256
+elseif &term == "linux"
+  set t_Co=16
+endif
+
 if &diff
   color inkpot
 else
-  color xoria256
+  color molokai
 endif
+
 " }}}
+
 
 "scroll off settings
 set scrolloff=5
@@ -168,21 +222,6 @@ set statusline+=%*
 "display a warning if file encoding isnt utf-8
 set statusline+=%#warningmsg#
 set statusline+=%{(&fenc!='utf-8'&&&fenc!='')?'['.&fenc.']':''}
-set statusline+=%*
-
-"syntastic warnings
-set statusline+=%#warningmsg#
-set statusline+=%*
-
-set statusline+=%h "help file flag
-set statusline+=%y "filetype
-set statusline+=%r "read only flag
-set statusline+=%m "modified flag
-
-set statusline+=%*
-
-
-set statusline+=%#warningmsg#
 set statusline+=%*
 
 "display a warning if &paste is set
@@ -217,7 +256,6 @@ endfunction
 
 
 "{{{ -[ FileTypes ]-
-" Jump to last known cursor position
 
 "json
 autocmd BufRead,BufNewFile *.json setfiletype json
@@ -226,7 +264,10 @@ autocmd BufRead,BufNewFile *.json setfiletype json
 autocmd FileType text setlocal textwidth=80
 
 " mail
-autocmd FileType mail,human set formatoptions+=t textwidth=72
+autocmd BufRead,BufNewFile *.mail setfiletype mail
+
+autocmd FileType mail,human set formatoptions=tcq textwidth=72 comments+=b:--
+" formatoptions=tcrqan -- annoying because you cant break line when you feel like it
 
 " html
 autocmd BufNewFile *.html  0r ~/.vim/skeleton.html
@@ -238,15 +279,14 @@ let php_sql_query = 1
 let php_html_in_strings = 1
 let php_no_shorttags = 0
 let php_sync_method = 1
-autocmd FileType php set shiftwidth=2 softtabstop=2 tabstop=2
-autocmd FileType php set noet ft=php.html.javascript
+autocmd FileType php set noet shiftwidth=4 softtabstop=4 tabstop=4
+autocmd FileType php set ft=php.html.javascript
 
 " C
 autocmd FileType c set expandtab ai shiftwidth=4 softtabstop=4 tabstop=4
 
 " Python
 autocmd FileType python let python_highlight_all = 1
-autocmd FileType python let python_slow_sync = 1
 autocmd FileType python set expandtab ai shiftwidth=4 softtabstop=4 tabstop=4
 
 " LaTeX
@@ -255,6 +295,16 @@ autocmd Filetype tex,latex let g:tex_flavor = "latex"
 
 " .Dat (binary, data files)
 autocmd BufRead,BufNewFile *.dat set binary noendofline
+
+" .less
+autocmd BufRead,BufNewFile *.less set filetype=less
+
+" jade
+autocmd BufRead,BufNewFile *.jade set filetype=jade
+
+" Java
+autocmd BufRead,BufNewFile *.java set et ai filetype=java sw=4 sts=4
+
 
 "}}}
 
@@ -269,10 +319,6 @@ nnoremap <silent> <C-h> :wincmd h<CR>
 nnoremap <silent> <C-j> :wincmd j<CR>
 nnoremap <silent> <C-k> :wincmd k<CR>
 nnoremap <silent> <C-l> :wincmd l<CR>
-nnoremap <silent> <F1> :wincmd h<CR>
-inoremap <silent> <F1> <esc>:wincmd h<CR>
-nnoremap <silent> <F2> :wincmd l<CR>
-inoremap <silent> <F2> <esc>:wincmd l<CR>
 
 " taglist
 nnoremap <silent> <F8> :TlistToggle<CR>
@@ -296,6 +342,10 @@ inoremap <silent> <F7> <esc>:wqa<CR>
 nnoremap <silent> <F12> :MRU<CR>
 inoremap <silent> <F12> <esc>:MRU<CR>
 
+" FuzzyFinder
+nnoremap <silent> <F3> :CtrlP<CR>
+inoremap <silent> <F3> <esc>:CtrlP<CR>
+
 " Scroll a bit faster with <C-e> and <C-y>
 nnoremap <C-e> 6<C-e>
 nnoremap <C-y> 6<C-y>
@@ -305,12 +355,11 @@ map <leader>e :e! ~/.vim/vimrc<cr>
 " Remove buffer
 nnoremap <silent> <LocalLeader>- :bd<CR>
 
-"Django surround plugin mappings
-let g:surround_{char2nr("b")} = "{% block\1 \r..*\r &\1%}\r{% endblock %}"
-let g:surround_{char2nr("i")} = "{% if\1 \r..*\r &\1%}\r{% endif %}"
-let g:surround_{char2nr("w")} = "{% with\1 \r..*\r &\1%}\r{% endwith %}"
-let g:surround_{char2nr("c")} = "{% comment\1 \r..*\r &\1%}\r{% endcomment %}"
-let g:surround_{char2nr("f")} = "{% for\1 \r..*\r &\1%}\r{% endfor %}"
+" tselectbuffer
+noremap <m-b> :TSelectBuffer<cr>
+inoremap <m-b> <c-o>:TSelectBuffer<cr>
+
+map <C-t> :tabnew <CR>
 
 " }}}
 
@@ -325,47 +374,34 @@ let tlist_php_settings = 'php;c:class;f:Functions'
 "NerdTree settings
 "let NERDTreeHighlightCursorline = 1
 let NERDTreeChDirMode = 2
-let NERDTreeIgnore=['\.db$', '\~$', '\.pyc$', '^__init__\.py$', '\.jpg$', '\.gif$', '\.png$', '\.pdf$', '\.rxvt.*']
+let NERDTreeIgnore=['\.db$', '\~$', '\.pyc$', '^__init__\.py$', '\.jpg$', '\.gif$', '\.png$', '\.pdf$', '^\.rxvt*', '^\.rxvt-unicode-ctkarch', '\.class$']
 let NerdTreeMouseMode = 2
+let NERDChristmasTree = 1
+let NERDTreeQuitOnOpen = 1
+let NERDTreeDirArrows = 1
+let NERDTreeMinimalUI = 1
 
 "MRU
 let MRU_Add_Menu = 0
+
+"PyLint
+" Dont run pylint on every write
+let g:PyLintOnWrite = 0
 
 " }}}
 
 "{{{ User Commands
 
-" When vimrc is edited, reload it (have yet to see this actually work)
-" autocmd! bufwritepost ~/.vimrc source $MYVIMRC
+" edit rc
+:nnoremap <silent> <Leader>v :99tabe $MYVIMRC<CR>
+command! Editrc :tabe $MYVIMRC
 
-command! Editrc :e $MYVIMRC
+" reload vimrc
+:nnoremap <silent> <Leader>V :exec 'tabdo windo source $MYVIMRC' <bar> exec 'tabdo windo filetype detect' <bar> echo 'vimrc reloaded'<CR>
 
-command! -nargs=+ Grep :grep -r --include=*.php --exclude-dir=blog --exclude-dir=wp --exclude-dir=phpMyAdmin '<args>' /home/el/daddys
+" trim trailing whitespace
+command! TrimTrailingSpace :%s/\s\+$//e
 
-"command! W :w !sudo tee %
-
-comm! W exec 'w !sudo tee % > /dev/null' | e!
-
-function! ShowSpaces(...)
-  let @/='\v(\s+$)|( +\ze\t)'
-  let oldhlsearch=&hlsearch
-  if !a:0
-    let &hlsearch=!&hlsearch
-  else
-    let &hlsearch=a:1
-  end
-  return oldhlsearch
-endfunction
-
-function! TrimSpaces() range
-  let oldhlsearch=ShowSpaces(1)
-  execute a:firstline.",".a:lastline."substitute ///gec"
-  let &hlsearch=oldhlsearch
-endfunction
-
-command! -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
-command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
-nnoremap <Leader>,     :ShowSpaces 1<CR>
-nnoremap <Leader>.   m`:TrimSpaces<CR>``
-vnoremap <Leader>.   :TrimSpaces<CR>
+" save system file in case we forgot sudo
+command! W exec 'w !sudo tee % > /dev/null' | e!
 "}}}

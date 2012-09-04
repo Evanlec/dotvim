@@ -1,7 +1,6 @@
 set guicursor+=n-v-c:blinkon0
 set background=dark
-colorscheme xoria256
-set gfn=Droid\ Sans\ Mono\ 10
+set gfn=Inconsolata\ 11
 set guioptions=aci
 "set lines=60
 "set columns=240
